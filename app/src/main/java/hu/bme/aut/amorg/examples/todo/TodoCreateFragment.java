@@ -3,6 +3,7 @@ package hu.bme.aut.amorg.examples.todo;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,7 @@ import android.widget.TextView;
 
 import hu.bme.aut.amorg.examples.todo.model.Todo;
 
-public class TodoCreateFragment extends DialogFragment {
+public class TodoCreateFragment extends DialogFragment implements DatePickerDialogFragment.DateListener{
 
     public static final String TAG = "TodoCreateFragment";
 
@@ -78,7 +79,11 @@ public class TodoCreateFragment extends DialogFragment {
         txtDueDate.setText("  -  ");
         txtDueDate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //Itt jon a datumvalaszto
+                txtDueDate.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        showDatePickerDialog();
+                    }
+                });
             }
         });
 
@@ -124,6 +129,20 @@ public class TodoCreateFragment extends DialogFragment {
         });
 
         return root;
+    }
+
+    @Override
+    public void onDateSelected(String date) {
+        txtDueDate.setText(date);
+    }
+
+
+    private void showDatePickerDialog() {
+        FragmentManager fm = getFragmentManager();
+
+        DatePickerDialogFragment datePicker = new DatePickerDialogFragment();
+        datePicker.setTargetFragment(this, 0);
+        datePicker.show(fm, DatePickerDialogFragment.TAG);
     }
 
     // Listener interface
